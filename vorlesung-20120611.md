@@ -1,10 +1,32 @@
 % Vorlesung "Sicherheit"
 %
-% 11. Juni 2012
+% 4. Juni und 11. Juni 2012
 
 # Zugriffskontrolle
 
 ## Bell-LaPadula-Modell
+
+Oberstes Schutzziel ist "Confidentiality".
+
+Gegeben sind:
+
+* Eine Subjektmenge $S$
+* Eine Objektmenge $O$
+* Menge von Zugriffsoperationen $A = \{ read, write, append, execute \}$. Write-Rechte implizieren Read-Rechte.
+* Menge $L$ von Security Levels mit einer partiellen Ordnung $\leq$
+
+Im Bell-LaPadula-Modell ist der Systemzustand ein Element aus $B \times M \times F$ wobei:
+
+* $B = \mathcal{P}(S \times O \times A)$ beschreibt aktuelle Zugriffe
+* $M$ die Menge der Zugriffskontrollmatrizen (ACM) bezüglich der Subjekte in $S$ und der Objekte in $O$. Die Elemente von $M$ haben die Form $M = {(m_{so})}_{s \in S, o \in O}$ mit $M_{so} \subseteq A$ für alle $s \in S, o \in O$.
+* $F$ enthält 3-Tupel aus Funktionen, den sogenannten security level assignments. Ein 3-Tupel $(f_s, f_c, f_o)$ hat dabei folgende Form und Bedeutung:
+	* $f_s: S \mapsto L$ gibt für jedes $s' \in S$ das maximale Sicherheitslevel an.
+	* $f_c: S \mapsto L$ den das gegenwärtige Sicherheitslevel an.
+	* $f_o: O \mapsto L$ gibt für jedes $o' \in O$ das Sicherheitslevel an.
+
+	Es gilt: $f_c$ muss von $f_s$ dominiert werden, d.h. $\forall s' \in S: f_c(s') \leq f_s(s')$
+
+Ein Systemzustand heißt sicher, wenn er folgende 3 Eigenschaften erfüllt:
 
 ### Simple Security Property (ss-Eigenschaft)
 
@@ -14,11 +36,11 @@ Ein Zustand $(b, M, f)$ genügt des ss-Eigenschaft, falls für alle $(s, o, a) \
 
 Ein Zustand $(b, M, f)$ erfüllt die *-Eigenschaft, falls für jedes $(s', o', a) \in b$ mit $a \in \{append, write\}$ gilt: $f_c(s') \leq f_o(o')$ (no write down).
 
-Weiterhin, falls ein $(s', o', a) \in b$ mit $a \in \{append, write\}$ und ein $(\wedge{a}, \wedge{o}, \wedge{a}) \in b$ mit $s\ = \wedge{s}$ und $\wedge{a} \in \{read, write\}$ existiert, dann  muss $f_o(\wedge{o}) \leq f_o(o')$ gelten, d.h. kein Nachrichtenfluss von high level object zu low level object.
+Weiterhin, falls ein $(s', o', a) \in b$ mit $a \in \{append, write\}$ und ein $(\hat{s}, \hat{o}, \hat{a}) \in b$ mit $s\ = \hat{s}$ und $\hat{a} \in \{read, write\}$ existiert, dann muss $f_o(\hat{o}) \leq f_o(o')$ gelten, d.h. kein Nachrichtenfluss von high level object zu low level object.
 
 ### Discretionary Security Property (ds-Eigenschaft)
 
-Ein Zustand $(b, M, f)$ erfüllt die ds-Eigenschaft, fals für $(s', o', a) \in b$ stets $a \in M_{s'o'}$ gilt.
+Ein Zustand $(b, M, f)$ erfüllt die ds-Eigenschaft, falls für $(s', o', a) \in b$ stets $a \in M_{s'o'}$ gilt.
 
 ## Basic Security Theorem
 
@@ -44,7 +66,7 @@ Werden ausgehend von einem sicheren Initialzustand nur sichere Übergänge durch
 
 	Müller-Quade:
 
-	> "Man kann damit tatsächlich Entscheidungen fällen, wenn man irgendein fluffiges, kompliziertes System hätte, wäre das vielleicht nicht der Fall."
+	> "Man kann damit tatsächlich Entscheidungen fällen. Wenn man irgendein fluffiges, kompliziertes System hätte, wäre das vielleicht nicht der Fall."
 
 ## Chinese-Wall-Modell
 
